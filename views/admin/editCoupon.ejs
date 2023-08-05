@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fresh Pick</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div class="screen-overlay"></div>
+    <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+      <section class="content-main">
+        <div class="row">
+          <div class="col-9">
+            <div class="content-header">
+              <h2 class="content-title">Add New Coupon</h2>
+            </div>
+          </div>
+          <div class="col-12 col-sm-9">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h4>Basic</h4>
+              </div>
+              <!-- <% if(typeof errMessage !== 'undefined'){ %>
+              <p style="color: #f44336; margin-top: -10px"><%= errMessage %></p>
+              <% } %> -->
+              <div class="card-body">
+                <form action="/admin/editCoupon" method="post">
+                  <div class="form-group mb-3">
+                    <label for="title">Coupon Title</label>
+                    <input type="text" name="title" id="title" value="<%=coupon.title %>" class="form-control" required>
+                  </div>
+                  
+                  <div class="form-group mb-3">
+                    <label for="couponCode">Coupon Code</label>
+                    <input type="text" name="couponCode" id="couponCode" value="<%=coupon.couponCode  %>" class="form-control" required>
+                    <div id="couponCode_error" class="error-text"></div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="couponCode">Discount Amount</label>
+                    <input type="text" name="discountAmount" id="discountAmount" value="<%=coupon.discountAmount  %>" class="form-control" required>
+                    <div id="couponCode_error" class="error-text"></div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label for="minAmount">Minimum Amount</label>
+                    <input type="text" name="minAmount" id="minAmount" value="<%=coupon.minAmount  %>" class="form-control" required>
+                  </div>
+                  
+                  <div class="form-group mb-3">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" name="expiryDate" value="<%=coupon.expiryDate.toISOString().substring(0,10)  %>" id="expiryDate" class="form-control" required>
+                  </div>
+
+                  <div class="form-check mb-3">
+                    <input type="checkbox" name="expire" id="expireCheckbox" class="form-check-input">
+                    <label for="expireCheckbox" class="form-check-label">Expire Coupon</label>
+                  </div>
+                  <input type="hidden" name="id" value="<%=coupon._id  %>">
+                  <button type="submit" class="btn btn-primary mt-3">Create Coupon</button>
+                </form>
+                
+              </div>
+            </div>
+            <!-- card end// -->
+          </div>
+        </div>
+      </section>
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    
+    
+  </body>
+</html>

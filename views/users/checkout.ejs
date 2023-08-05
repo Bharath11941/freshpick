@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fresh Pick</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+
+    <link rel="stylesheet" href="css/aos.css" />
+
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="css/jquery.timepicker.css" />
+
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/icomoon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg" />
+    <style>
+      /* Decorated links for Home and Shop */
+      .decorated-link {
+        position: relative;
+        color: #333; /* Set the link text color */
+        text-decoration: none;
+        transition: color 0.3s ease;
+        padding-right: 10px; /* Adjust this value to add spacing between text and decoration */
+      }
+    
+      .decorated-link:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px; /* Adjust this value to change the decoration line's height */
+        background-color: #ff8c00; /* Set the decoration line color */
+        transition: width 0.3s ease;
+      }
+    
+      .decorated-link:hover {
+        color: #ff8c00; /* Set the link text color on hover */
+      }
+    
+      .decorated-link:hover:before {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="goto-here">
+    <%- include("../layouts/userNav.ejs") %>
+    <!-- END nav -->
+    <form id="checkoutform">
+    <section class="ftco-section ">
+  <div class="container ">
+   
+    <div class="row justify-content-center">
+      <div class="col-xl-7 ftco-animate">
+        <div class="billing-form">
+          <div class="row align-items-end">
+            <div class="col-md-12">
+              <div class="form-group">
+                <h3 class="billing-heading mb-4">Shipping Address</h3>
+                <button type="button" class="btn btn-success font-weight-bold" style="border-radius: 6px" data-toggle="modal" data-target="#exampleModalLong">
+                  Add Address
+                </button>
+                <div>
+                  <hr>
+                  <% userOrder.address.forEach((address, index) => { %>
+                    <div class="row d-flex align-items-center" id="addrId">
+                      <div class="col-1">
+                        <input type="radio" name="address" id="address<%= index %>" value="<%= address.name %>, <%= address.housename %>, <%= address.mobile %>, <%= address.city %>, <%= address.district %>, <%= address.state %>, <%= address.pincode %>" required />
+                      </div>
+                      <div class="col-7">
+                        <label for="address<%= index %>" class="text-dark">
+                          <%= address.name %>, <%= address.housename %>, <%= address.mobile %>, <br />
+                          <%= address.city %>, <%= address.district %>, <%= address.state %><br>
+                          <%= address.pincode %>
+                        </label>
+                      </div>
+                      <div class="col-2 ">
+                        <!-- Edit button -->
+                        <a href="/address?userId=<%=userOrder._id  %>&addressId=<%=address._id  %>&check=3" class="btn btn-primary btn-sm mb-3" style="border-radius: 6px;">Edit</a>
+                        <!-- Delete button -->
+                        <a href="" onclick="handleDeleteAddress('<%=address._id  %>')" class="btn btn-danger btn-sm" style="border-radius: 6px;">Delete</a>
+                      </div>
+                      <hr>
+                    </div>
+                    
+                  <% }) %>
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <!-- END -->
+      </div>
+      
+      <div class="col-xl-5 ">
+          <div class="cart-total mb-3">
+            <h3>Coupon Code</h3>
+            <p>Enter your coupon code if you have one</p>
+              <div class="form-group">
+                <input type="text" id="couponCode" class="form-control text-left px-3" placeholder="">
+              </div>
+              <button type="button" class="btn btn-danger rounded-0 badge-dar mb-2" data-toggle="modal" data-target="#discountModal">
+                Available coupons
+              </button>
+          </div>
+         <a href="" class="btn btn-primary btn-sm mb-3 py-2 px-3" id="cButton" onclick="applyCoupon()">Apply Coupon</a>
+        <div class="row  ">
+          <div class="col-md-12 d-flex mb-3"> 
+            <div class="cart-detail cart-total p-3 p-md-4">
+              
+              <h3 class="billing-heading mb-4">Products</h3>
+              <% let sum =0 %>
+              <% userOrder.cart.forEach((cart)=>{ %>
+              <p class="d-flex">
+                <span><%=cart.productId.title%> x <%=cart.quantity %>  </span>
+                <span>₹ <%=cart.total %></span>
+              </p>
+              <hr />
+              <% sum = sum + cart.total %>
+              <% }) %>
+              
+              <p class="d-flex">
+                <span>Cart Toatl</span>
+                <span><%=sum  %></span>
+              </p>
+              <p class="d-flex">
+                <span>Coupon discount</span>
+                <span id="couponDiscount">0</span>
+              </p>
+              <p class="d-flex total-price">
+                <span>Total</span>
+                ₹<span id="grandTotal"> <%=userOrder.grandTotal  %></span>
+
+              </p>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="cart-detail p-3 p-md-4">
+              <h3 class="billing-heading mb-4">Payment Method</h3>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="radio">
+                    <label
+                      ><input type="radio" name="paymentMethod" value="COD" class="mr-2" />
+                      COD</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="radio">
+                    <label
+                      ><input type="radio" name="paymentMethod" value="ONLINE" class="mr-2" />
+                      Razorpay</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <% if(userOrder.wallet >= userOrder.grandTotal ){ %>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="radio">
+                      <label
+                        ><input type="radio" name="paymentMethod" value="WALLET" class="mr-2" />
+                        Wallet</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+              <% if(userOrder.address.length === 0){ %>
+                <div class="row align-items-end">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary py-3 px-4" disabled>Place an order</button>
+                    </div>
+                  </div>
+                </div>
+              <% }else{ %>
+                <div class="row align-items-end">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary py-3 px-4">Place an order</button>
+                    </div>
+                  </div>
+                </div>
+              <%  } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- .col-md-8 -->
+    </div>
+  </div>
+</section>
+</form>
+
+<div class="modal fade mt-5" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <% if( availableCoupons && availableCoupons.length > 0) { %>
+      <% for( coupon of availableCoupons ) { %>
+        <div class="modal-content rounded-0">
+          <div class="modal-body text-center">
+            <div class="icon text-danger">
+              <i class="fas fa-gift"></i>
+            </div>
+            <div class="notice">
+              <h4>Get <%= coupon.discountAmount %> Discount</h4>
+              <p>This coupon is only available for purchases above ₹ <%= coupon.minAmount %></p>
+              <p>Valid from <%= moment(coupon.createdAt).format('MM/DD/YYYY') %> to <%= moment(coupon.expiryDate).format('MM/DD/YYYY') %></p>
+              <p>Use promo code <span style="font-size: medium;" class="badge badge-info"><%= coupon.couponCode %></span></p>
+            </div>
+            <div class="code"></div>
+          </div>
+        </div>
+      <% } %>
+    <% } else { %>
+      <div class="modal-content rounded-0">
+        <div class="modal-body text-center">
+          <div class="icon text-danger">
+            <i class="fas fa-times-circle fa-5x"></i>
+          </div>
+          <div class="notice mt-3">
+            <h4 class="text-danger">No Available Coupons for You</h4>
+            <p class="lead">Unfortunately, there are no coupons currently available for your purchases.</p>
+          </div>
+          <div class="code"></div>
+        </div>
+      </div>
+      
+    <% } %>
+  </div>
+</div>
+
+
+
+
+
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/orderAddress">
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">name</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  placeholder="Enter the Name"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">House name</label>
+                <input
+                  type="text"
+                  name="housename"
+                  id="housename"
+                  class="form-control"
+                  placeholder="Enter the House name"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  id="city"
+                  class="form-control"
+                  placeholder="Enter the City"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">Disctrict</label>
+                <input
+                  type="text"
+                  name="district"
+                  id="discrict"
+                  class="form-control"
+                  placeholder="Enter the Disctrict"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">State</label>
+                <input
+                  type="text"
+                  name="state"
+                  id="state"
+                  class="form-control"
+                  placeholder="Enter the state"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">Mobile</label>
+                <input
+                  type="text"
+                  name="mobile"
+                  id="phone"
+                  class="form-control"
+                  placeholder="Enter the Mobile"
+                  required
+                />
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="email1">pincode</label>
+                <input
+                  type="text"
+                  name="pincode"
+                  id="pincode"
+                  class="form-control"
+                  placeholder="enter the pincode"
+                  required
+                />
+              </div>
+          </div>
+          <div class="modal-footer">
+            <!-- <a href="/checkout" class="" > <button class="btn btn-dark" data-dismiss="modal">Close</button></a> -->
+           
+            <button type="submit" class="btn btn-primary">Add New Address</button>
+         </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- .section -->
+
+    <%- include("../layouts/userFooter.ejs") %>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="js/google-map.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+     $('#checkoutform').submit((e) => {
+      let address = $("input[name=address]:checked").val()
+      let paymentMethod = $('input[name=paymentMethod]:checked').val()
+      let grandTotal = parseInt($('#grandTotal').text().trim());
+      console.log(paymentMethod);
+      e.preventDefault()
+      $.ajax({
+        url:'/placeOrder',
+        method:'post',
+        data:{
+          address:address,
+          paymentMethod:paymentMethod,
+          grandTotal:grandTotal,
+        },
+        success:(response) => {
+          if(response.codSuccess == true){
+            location.href = '/orderConfirm'
+          }else{
+            razorpayPayment(response.order);
+          }
+        }
+      })
+     })
+     function razorpayPayment(order){
+        var options = {
+          "key": 'rzp_test_pkUbv7xbv5KNrA', // Enter the Key ID generated from the Dashboard
+          "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "Organic Store",
+          "description": "Test Transaction",
+          "image": "https://example.com/your_logo",
+          "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "handler": function (response){
+              verifyPayment(response,order)
+          },
+          "prefill": {
+              "name": "Gaurav Kumar",
+              "email": "gaurav.kumar@example.com",
+              "contact": "9000090000"
+          },
+          "notes": {
+              "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+              "color": "#3399cc"
+          }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+     }
+     function verifyPayment(payment,order){
+      $.ajax({
+        url:'verifyPayment',
+        data:{
+          payment,
+          order
+        },
+        method:'post',
+        success:(response) => {
+          if(response.success == true){
+            location.href = '/orderConfirm'
+          }else{
+            Swal.fire({
+            icon: 'error',
+            title: 'Payment has failed',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          }
+        },
+        
+
+      })
+     }
+  const handleDeleteAddress = async (addressId) => {
+    try {
+      event.preventDefault();
+
+      // Display the confirmation message
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this address!",
+        icon: "warning",
+        buttons: ["Cancel", "OK"],
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+          // User clicked "OK" button, perform the delete action
+          const deleteItem = await axios.put('/deleteAddress', { addressId });
+
+          if (deleteItem.data.success) {
+            // Remove the deleted element from the DOM
+            const elementToRemove = document.getElementById('addrId');
+            elementToRemove.parentNode.removeChild(elementToRemove);
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  function applyCoupon() {
+    event.preventDefault()
+    const couponCode = document.getElementById("couponCode").value.trim();
+    const cartTotal = document.getElementById('grandTotal').innerHTML
+    console.log(cartTotal);
+    console.log(couponCode);
+    if (couponCode !== "") {
+      axios.post("/applyCoupon", { couponCode,cartTotal })
+        .then(response => {
+          const {wrongcp,minAmounts,expired,applied,minAmount,discountedTotal,discountAmount,usedCoupon,onetime} = response.data
+          if(applied){
+            document.getElementById('couponDiscount').innerHTML = discountAmount
+            document.getElementById('grandTotal').innerHTML=discountedTotal
+            document.getElementById("cButton").disabled=true;
+            console.log("hi button");
+            swal("Copon added successfully", "", "success");   
+          }else if(wrongcp){
+            swal("Not available");
+          }else if(minAmounts){
+            swal(`You should purchase atleast ${minAmount}`);
+          }else if(expired){
+            swal("coupon has expired");
+          }else if(usedCoupon){
+            swal("coupon has already used");
+          }else if(onetime){
+            swal("You already used one coupon");
+          }
+        })
+        .catch(error => {
+          // Handle any errors that occur during the request
+          console.log(error);
+        });
+    }
+  }
+
+
+    </script>
+  </body>
+</html>

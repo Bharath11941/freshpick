@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fresh Pick</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+
+    <link rel="stylesheet" href="css/aos.css" />
+
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="css/jquery.timepicker.css" />
+
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/icomoon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Decorated links for Home and Shop */
+      .decorated-link {
+        position: relative;
+        color: #333; /* Set the link text color */
+        text-decoration: none;
+        transition: color 0.3s ease;
+        padding-right: 10px; /* Adjust this value to add spacing between text and decoration */
+      }
+
+      .decorated-link:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px; /* Adjust this value to change the decoration line's height */
+        background-color: #ff8c00; /* Set the decoration line color */
+        transition: width 0.3s ease;
+      }
+
+      .decorated-link:hover {
+        color: #ff8c00; /* Set the link text color on hover */
+      }
+
+      .decorated-link:hover:before {
+        width: 100%;
+      }
+    </style>
+    <style>
+      .wishlist-icon {
+        font-size: 24px;
+        padding: 4px;
+        color: black;
+        display: inline-block;
+        margin-left: 10px;
+      }
+      .image {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        overflow: hidden;
+      }
+      .image img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -o-object-fit: cover;
+        object-fit: cover;
+        transform: scale(var(--zoom, 1));
+        transform-origin: var(--x) var(--y);
+        transition: transform 0.3s ease;
+      }
+      .image:hover {
+        --zoom: 3;
+      }
+      @media screen and (max-width: 768px) {
+        .image {
+          max-width: 100%; /* Set the container width to 100% on smaller devices */
+        }
+      }
+    </style>
+  </head>
+  <body class="goto-here">
+    <%- include("../layouts/userNav.ejs") %>
+
+    <!-- END nav -->
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5 ftco-animate">
+            <div class="image">
+              <img
+                id="main-image"
+                src="/productImages/resized/<%=singleProduct.image[0]%>"
+                alt="Main Product Image"
+              />
+            </div>
+
+            <div class="additional-images row">
+              <% for (let i = 1; i < singleProduct.image.length; i++) { %>
+              <div class="col-3 additional-image">
+                <img
+                  id="additional-image"
+                  src="/productImages/resized/<%= singleProduct.image[i] %>"
+                  onclick="changeMainImage(this.src)"
+                  class="img-fluid img-thumbnail mt-5"
+                  alt="Additional Image"
+                />
+              </div>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+            <h3><%=singleProduct.title %></h3>
+            <div class="rating d-flex">
+              <p class="text-left mr-4">
+                <a href="#" class="mr-2">5.0</a>
+                <a href="#"><span class="ion-ios-star-outline"></span></a>
+                <a href="#"><span class="ion-ios-star-outline"></span></a>
+                <a href="#"><span class="ion-ios-star-outline"></span></a>
+                <a href="#"><span class="ion-ios-star-outline"></span></a>
+                <a href="#"><span class="ion-ios-star-outline"></span></a>
+              </p>
+              <p class="text-left mr-4">
+                <a href="#" class="mr-2" style="color: #000"
+                  >100 <span style="color: #bbb">Rating</span></a
+                >
+              </p>
+              <p class="text-left">
+                <a href="#" class="mr-2" style="color: #000"
+                  >500 <span style="color: #bbb">Sold</span></a
+                >
+              </p>
+            </div>
+            <% if (singleProduct.category.name !== 'Juices') { %>
+            <p class="price">
+              <span
+                ><i class="fas fa-rupee-sign"></i><%=singleProduct.price
+                %>/Kg</span
+              >
+            </p>
+            <% } %>
+            <p><%=singleProduct.description %></p>
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="form-group d-flex">
+                  <div class="select-wrap">
+                    <h5>Category</h5>
+                    <p class="price">
+                      <span><%=singleProduct.category.name %></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <% if (singleProduct.category.name !== 'Juices') { %>
+                <p style="color: #000">
+                  <%=singleProduct.quantity %> kg available
+                </p>
+                <% }else{%>
+                <p style="color: #000">
+                  <%=singleProduct.quantity %> available
+                </p>
+                <%} %>
+              </div>
+              <div class="w-100"></div>
+              <!-- <div class="input-group col-md-6 d-flex mb-3">
+                <span class="input-group-btn mr-2">
+                  <button
+                    type="button"
+                    class="quantity-left-minus btn"
+                    data-type="minus"
+                    data-field=""
+                  >
+                    <i class="ion-ios-remove"></i>
+                  </button>
+                </span>
+                <input
+                  type="text"
+                  id="quantity"
+                  name="quantity"
+                  class="form-control input-number"
+                  value="1"
+                  min="1"
+                  max="<%= singleProduct.quantity %>"
+                />
+                <span class="input-group-btn ml-2">
+                  <button
+                    type="button"
+                    class="quantity-right-plus btn"
+                    data-type="plus"
+                    data-field=""
+                  >
+                    <i class="ion-ios-add"></i>
+                  </button>
+                </span>
+              </div> -->
+              <div class="w-100"></div>
+            </div>
+            <% if(singleProduct.quantity == 0){ %>
+
+            <h4 class="text-danger">Out of stock...!</h4>
+            <a
+              href=""
+              class="wishlist-icon"
+              onclick="addToWishlist('<%=singleProduct._id%>')"
+            >
+              <i class="fas fa-heart"></i>
+            </a>
+            <% }else if(singleProduct.quantity <10){ %>
+            <p>
+              <a
+                href=""
+                onclick="addToCart('<%=singleProduct._id%>', 1 ,'<%= singleProduct.price%>')"
+                class="btn btn-black py-3 px-5"
+                >Add to Cart</a
+              >
+              <a
+                href=""
+                class="wishlist-icon"
+                onclick="addToWishlist('<%=singleProduct._id%>')"
+              >
+                <i class="fas fa-heart"></i>
+              </a>
+              <br />
+              <span class="text-danger"> Only few left...!</span>
+            </p>
+            <% }else{ %>
+            <p>
+              <a
+                href=""
+                onclick="addToCart('<%=singleProduct._id%>',1,'<%= singleProduct.price%>')"
+                class="btn btn-black py-3 px-5"
+                >Add to Cart</a
+              >
+              <a
+                href=""
+                onclick="addToWishlist('<%=singleProduct._id%>')"
+                class="wishlist-icon"
+                ><i class="fas fa-heart"></i
+              ></a>
+            </p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+          <div class="col-md-12 heading-section text-center ftco-animate">
+            <span class="subheading">Products</span>
+            <h2 class="mb-4">Related Products</h2>
+            <p>
+              Far far away, behind the word mountains, far from the countries
+              Vokalia and Consonantia
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <% function shuffleArray(array) { for (let i = array.length - 1; i >
+          0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i],
+          array[j]] = [array[j], array[i]]; } return array; } const
+          shuffledProducts = shuffleArray(products); for (let i = 0; i < 4 && i
+          < shuffledProducts.length; i++) { const category =
+          shuffledProducts[i].category; if(category.status===true){ %>
+          <div class="col-md-6 col-lg-3 ftco-animate">
+            <div class="product">
+              <a
+                href="/singleProduct?id=<%=shuffledProducts[i]._id  %>"
+                class="img-prod"
+                ><img
+                  class="img-fluid"
+                  src="/productImages/resized/<%=shuffledProducts[i].image[0]  %>"
+                  alt="Colorlib Template"
+                />
+
+                <div class="overlay"></div>
+              </a>
+              <div class="text py-3 pb-4 px-3 text-center">
+                <h3><a href="#"><%=shuffledProducts[i].title %></a></h3>
+                <% if (shuffledProducts[i].category &&
+                shuffledProducts[i].category.name !== 'Juices') { %>
+                <div class="d-flex">
+                  <div class="pricing">
+                    <p class="price">
+                      <span class="price-sale"
+                        ><i class="fas fa-rupee-sign"></i
+                        ><%=shuffledProducts[i].price %>/Kg</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <% } %>
+                <div class="bottom-area d-flex px-3">
+                  <div class="m-auto d-flex">
+                    <a
+                      href="#"
+                      class="add-to-cart d-flex justify-content-center align-items-center text-center"
+                    >
+                      <span><i class="ion-ios-menu"></i></span>
+                    </a>
+                    <a
+                      href=""
+                      onclick="addToCart('<%=shuffledProducts[i]._id%>',1,'<%= shuffledProducts[i].price%>')"
+                      class="buy-now d-flex justify-content-center align-items-center mx-1"
+                    >
+                      <span><i class="ion-ios-cart"></i></span>
+                    </a>
+                    <a
+                      href="#"
+                      onclick="addToWishlist('<%=shuffledProducts[i]._id%>')"
+                      class="heart d-flex justify-content-center align-items-center"
+                    >
+                      <span><i class="ion-ios-heart"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }} %>
+        </div>
+      </div>
+    </section>
+
+    <%- include("../layouts/userFooter.ejs") %>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="js/google-map.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const user = "<%=user%>";
+      const totalStock = parseInt("<%=singleProduct.quantity %>");
+
+      const addToCart = async (productId, quantity, singlePrice) => {
+        try {
+          event.preventDefault();
+          if (user) {
+            const productData = await axios.post("/addToCart", {
+              productId,
+              quantity,
+              singlePrice,
+              totalStock,
+            });
+            if (productData.data.count) {
+              document.getElementById(
+                "cartCount"
+              ).innerHTML = `<span class="icon-shopping_cart" ></span>${productData.data.count}`;
+              swal("Added to cart", "", "success");
+            }
+            if (productData.data.message) {
+              swal("Added to cart", "", "success");
+            }
+
+            if (productData.data.cartMessage) {
+              swal("Cart quantity reaches the limit");
+            }
+            return productData;
+          } else {
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      const addToWishlist = async (productId) => {
+        try {
+          event.preventDefault();
+          if (user) {
+            const wishlistData = await axios.put("/wishlist", { productId });
+            const { count } = wishlistData.data;
+            console.log(count);
+            swal("Added to wishlist", "", "success");
+            if (wishlistData.data.success === false) {
+              swal("Product already exist in the wishlist");
+            }
+            if (count || count === 0) {
+              document.getElementById(
+                "wishlistCount"
+              ).innerHTML = `<span><i class="ion-ios-heart"></i></span>${count}`;
+            }
+          } else {
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      $(document).ready(function () {
+        var quantity = 1; // Set the initial quantity to 1
+        $(".quantity-right-plus").click(function (e) {
+          e.preventDefault();
+          var quantity = parseInt($("#quantity").val());
+          $("#quantity").val(quantity + 1);
+        });
+
+        $(".quantity-left-minus").click(function (e) {
+          e.preventDefault();
+          var quantity = parseInt($("#quantity").val());
+          if (quantity > 1) {
+            // Only decrement if quantity is greater than 1
+            $("#quantity").val(quantity - 1);
+          }
+        });
+      });
+
+      document.querySelectorAll(".image").forEach((elem) => {
+        let x, y, width, height;
+        elem.onmouseenter = () => {
+          const size = elem.getBoundingClientRect();
+
+          x = size.x;
+          y = size.y;
+          width = size.width;
+          height = size.height;
+        };
+        elem.onmousemove = (e) => {
+          const horizontal = ((e.clientX - x) / width) * 100;
+          const vertical = ((e.clientY - y) / height) * 100;
+          elem.style.setProperty("--x", horizontal + "%");
+          elem.style.setProperty("--y", vertical + "%");
+        };
+      });
+
+      let mainImageSrc = document.getElementById("main-image").src;
+
+      function changeMainImage(clickedSrc) {
+        const mainImage = document.getElementById("main-image");
+        const tempSrc = mainImage.src;
+
+        mainImage.src = clickedSrc;
+        mainImageSrc = clickedSrc;
+
+        event.target.src = tempSrc;
+      }
+    </script>
+  </body>
+</html>

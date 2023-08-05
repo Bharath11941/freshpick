@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Fresh Pick</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg" />
+  <!-- Template CSS -->
+  <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="screen-overlay"></div>
+  <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+        <section class="content-main">
+          <div class="card mb-4">
+            <div class="row ml-15">
+              <div class="col-lg-6">
+                <h1 class="mt-5">Sales Report</h1>
+              </div>
+              <div class="col-lg-6 text-lg-end">
+                <button type="button" onclick="printDiv('printThisDiv')" class="btn btn-primary mt-4">
+                  Print
+                </button>
+                <button type="button" onclick="downloadCSV()" class="btn btn-primary mt-4">
+                  Download CSV
+                </button>
+                
+              </div>
+            </div>
+            <div class="row mt-4 ml-15 mb-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="startDatePicker">Select start date:</label>
+                  <input type="date" id="startDatePicker" class="form-control" onchange="selectedDate()" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="endDatePicker">Select end date:</label>
+                  <input type="date" id="endDatePicker" class="form-control" onchange="selectedDate()" />
+                </div>
+              </div>
+            </div>
+            <div id="dateError" class="text-danger ml-15 mb-3" style="display: none;">End date should be after start date.</div>
+            <!-- card-header end// -->
+            <div class="card-body">
+              <div class="table-responsive">
+                <div id="printThisDiv">
+                  <table class="table table-hover" id="tableReport">
+                    <thead id="tablehead">
+                      <tr>
+                        <th>No</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% let count=1%>
+                        <% orders.forEach(order=>{
+                          order.products.forEach(product=>{%>
+                          <tr>
+                            <td>
+                              <%=count %>
+                            </td>
+                            <td><b>
+                                <%=order._id %>
+                              </b></td>
+                            <td><b>
+                                <%=product.productId.title %>
+                              </b></td>
+                            <td>₹ <%=product.productId.price %>
+                            </td>
+                            <td>
+                              <%=product.quantity %>
+                            </td>
+                            <td>
+                              <%=order.method %>
+                            </td>
+                            <td>₹ <%=product.productId.price*product.quantity %>
+                            </td>
+                            <td>
+                              <%= moment(order.date).format('MM/DD/YYYY') %>
+                            </td>
+                            <td>
+                              <%=order.status %>
+                            </td>
+                          </tr>
+                          <%count++%>
+                            <%})%>
+                              <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+              <!-- table-responsive //end -->
+            </div>
+            <!-- card-body end// -->
+          </div>
+          <!-- card end// -->
+          <% if(totalPages> 1) { %>
+            <div class="pagination-area mt-30 mb-50">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                  <% if(req.query.page && parseInt(req.query.page)> 1) { %>
+                    <li class="page-item">
+                      <a class="page-link" href="/admin/salesReport?page=<%= parseInt(req.query.page) - 1 %>">
+                        <i class="material-icons md-chevron_left"></i>
+                      </a>
+                    </li>
+                    <% } for(let i=1; i <=totalPages; i++) { %>
+                      <li class="page-item <% if(req.query.page && parseInt(req.query.page) === i) { %>active<% } %>">
+                        <a class="page-link" href="/admin/salesReport?page=<%= i %>">
+                          <%= i %>
+                        </a>
+                      </li>
+                      <% } %>
+                        <% if(req.query.page && parseInt(req.query.page) < totalPages) { %>
+                          <li class="page-item">
+                            <a class="page-link" href="/admin/salesReport?page=<%= parseInt(req.query.page) + 1 %>">
+                              <i class="material-icons md-chevron_right"></i>
+                            </a>
+                          </li>
+                          <% } %>
+                </ul>
+              </nav>
+            </div>
+            <% } %>
+        </section>
+        <!-- content-main end// -->
+        </footer>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+      function convertToCSV(data) {
+    const headers = Array.from(data.querySelectorAll('#tablehead th')).map(th => th.textContent);
+    const rows = Array.from(data.querySelectorAll('tbody tr')).map(row => {
+      return Array.from(row.querySelectorAll('td')).map(td => td.textContent);
+    });
+    return [headers, ...rows];
+  }
+
+  function downloadCSV() {
+    const startDate = document.getElementById('startDatePicker').value;
+    const endDate = document.getElementById('endDatePicker').value;
+
+    // Validate if both start and end dates are selected
+    if (!startDate || !endDate) {
+      swal("Please select both start and end dates.");
+      return;
+    }
+
+    const tableData = convertToCSV(document.getElementById("tableReport"));
+    const filename = "sales_report.csv";
+
+    // Convert data to CSV format
+    const csvContent = tableData.map(row => row.join(',')).join('\n');
+
+    // Add a custom header to specify the encoding for the rupee symbol
+    // const csvWithHeader = '\ufeff' + 'data:text/csv;charset=utf-8,' + csvContent;
+
+    // Create a Blob with the CSV data
+    const blob = new Blob([csvContent], { type: "text/csv" });
+
+    // Generate a download URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a link with the download URL and trigger a click event on it to download the CSV file
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+
+  
+
+
+
+  function printDiv(divName) {
+    const startDate = document.getElementById('startDatePicker').value;
+    const endDate = document.getElementById('endDatePicker').value;
+
+    // Validate if both start and end dates are selected
+    if (!startDate || !endDate) {
+      swal("Please select both start and end dates.");
+      return;
+    }
+    const printContents = document.getElementById(divName).innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+
+  const validateDates = () => {
+    const startDate = new Date(document.getElementById('startDatePicker').value);
+    const endDate = new Date(document.getElementById('endDatePicker').value);
+    const currentDate = new Date();
+
+    if (startDate > endDate || startDate > currentDate) {
+      document.getElementById('dateError').style.display = 'block';
+      document.getElementById('endDatePicker').value = '';
+      return false;
+    } else {
+      document.getElementById('dateError').style.display = 'none';
+      return true;
+    }
+  };
+
+  const selectedDate = async () => {
+    try {
+      if (!validateDates()) {
+        return;
+      }
+
+      const startDate = document.getElementById('startDatePicker').value;
+      const endDate = document.getElementById('endDatePicker').value;
+      const response = await axios.post('/admin/salesReport', { startDate, endDate });
+      const salesReport = response.data.selectedDate;
+      const reportTable = document.getElementById('tableReport');
+      const head = document.getElementById('tablehead');
+      let count = 1;
+      const tableData = salesReport
+        .map((data) => `
+          <tr>
+            <td>${count++}</td>
+            <td><b>${data.orderID}</b></td>
+            <td><b>${data.productName}</b></td>
+            <td>${data.productPrice}</td>
+            <td>${data.productQuantity}</td>
+            <td>${data.paymentMethod}</td>
+            <td>${data.total}</td>
+            <td>${moment(data.date).format('MM/DD/YYYY')}</td>
+            <td>${data.status}</td>
+          </tr>
+        `)
+        .join('');
+      reportTable.querySelector('tbody').innerHTML = tableData;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+    </script>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+
+</html>

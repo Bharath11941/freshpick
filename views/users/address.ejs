@@ -1,0 +1,279 @@
+<%- include("../layouts/header.ejs") %> <%- include("../layouts/userNav.ejs") %>
+<% if(addAddressDetails){ %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form action="/updateAddress" method="post">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            value="<%=addAddressDetails.address[0].name %>"
+            name="name"
+            placeholder="Enter name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="housename">House Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="housename"
+            value="<%=addAddressDetails.address[0].housename %>"
+            name="housename"
+            placeholder="Enter house name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            class="form-control"
+            id="city"
+            value="<%=addAddressDetails.address[0].city %>"
+            name="city"
+            placeholder="Enter city"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="district">District</label>
+          <input
+            type="text"
+            class="form-control"
+            id="district"
+            value="<%=addAddressDetails.address[0].district %>"
+            name="district"
+            placeholder="Enter district"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="state">State</label>
+          <input
+            type="text"
+            class="form-control"
+            id="state"
+            value="<%=addAddressDetails.address[0].state %>"
+            name="state"
+            placeholder="Enter state"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Mobile</label>
+          <input
+            type="text"
+            class="form-control"
+            id="mobile"
+            value="<%=addAddressDetails.address[0].mobile %>"
+            name="mobile"
+            placeholder="Enter mobile number"
+            required
+          />
+        </div>
+        <%if(check ){%>
+          <input
+          type="hidden"
+          name="fromCheckout"
+          id="fromCheckoutInput"
+          value=<%=check  %>
+        />
+        <%}%>
+        
+        <div class="form-group">
+          <label for="pincode">Pincode</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pincode"
+            value="<%=addAddressDetails.address[0].pincode %>"
+            name="pincode"
+            placeholder="Enter pincode"
+            required
+          />
+        </div>
+        <input
+          type="hidden"
+          name="addressId"
+          value="<%=addAddressDetails.address[0]._id %>"
+        />
+        <input
+          type="hidden"
+          name="userId"
+          value="<%=addAddressDetails._id %>"
+        />
+        <button type="submit" class="btn btn-primary">update Address</button>
+      </form>
+    </div>
+  </div>
+</div>
+<%}else{%>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form action="/address" method="post">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Enter name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="housename">House Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="housename"
+            name="housename"
+            placeholder="Enter house name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            class="form-control"
+            id="city"
+            name="city"
+            placeholder="Enter city"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="district">District</label>
+          <input
+            type="text"
+            class="form-control"
+            id="district"
+            name="district"
+            placeholder="Enter district"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="state">State</label>
+          <input
+            type="text"
+            class="form-control"
+            id="state"
+            name="state"
+            placeholder="Enter state"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Mobile</label>
+          <input
+            type="text"
+            class="form-control"
+            id="mobile"
+            name="mobile"
+            placeholder="Enter mobile number"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="pincode">Pincode</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pincode"
+            name="pincode"
+            placeholder="Enter pincode"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Add Address</button>
+      </form>
+    </div>
+  </div>
+</div>
+<% } %> <%- include("../layouts/userFooter.ejs") %>
+
+<script>
+  const nameInput = document.getElementById("name");
+  nameInput.addEventListener("input", () => {
+    let name = nameInput.value.trim();
+    if (name === "") {
+      nameInput.setCustomValidity("name cannot be null");
+    } else {
+      nameInput.setCustomValidity("");
+    }
+  });
+  const housenameInput = document.getElementById("housename");
+  housenameInput.addEventListener("input", () => {
+    let housename = housenameInput.value.trim();
+    if (housename === "") {
+      housenameInput.setCustomValidity("Housename cannot be null");
+    } else {
+      housenameInput.setCustomValidity("");
+    }
+  });
+  const cityInput = document.getElementById("city");
+  cityInput.addEventListener("input", () => {
+    let city = cityInput.value.trim();
+    if (city === "") {
+      cityInput.setCustomValidity("City name cannot be null");
+    } else {
+      cityInput.setCustomValidity("");
+    }
+  });
+  const districtInput = document.getElementById("district");
+  districtInput.addEventListener("input", () => {
+    let district = districtInput.value.trim();
+    if (district === "") {
+      districtInput.setCustomValidity("District name cannot be null");
+    } else {
+      districtInput.setCustomValidity("");
+    }
+  });
+  const stateInput = document.getElementById("state");
+  stateInput.addEventListener("input", () => {
+    let state = stateInput.value.trim();
+    if (state === "") {
+      stateInput.setCustomValidity("State name cannot be null");
+    } else {
+      stateInput.setCustomValidity("");
+    }
+  });
+
+  const mobileInput = document.getElementById("mobile");
+  mobileInput.addEventListener("input", () => {
+    let mobile = mobileInput.value.trim();
+
+    // Regular expression pattern for a 10-digit mobile number
+    const mobileNumberPattern = /^\d{10}$/;
+
+    if (!mobileNumberPattern.test(mobile)) {
+      mobileInput.setCustomValidity("Invalid phone number");
+    } else {
+      mobileInput.setCustomValidity("");
+    }
+  });
+  const pincodeInput = document.getElementById("pincode");
+  pincodeInput.addEventListener("input", () => {
+    let pincode = pincodeInput.value.trim();
+
+    // Regular expression pattern for a 10-digit mobile number
+    const pincodePattern = /^\d{6}$/;
+
+    if (!pincodePattern.test(pincode)) {
+      pincodeInput.setCustomValidity("Invalid pincode number");
+    } else {
+      pincodeInput.setCustomValidity("");
+    }
+  });
+</script>
+
+<%- include("../layouts/footer.ejs") %>

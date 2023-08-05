@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fresh Pick</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+
+    <link rel="stylesheet" href="css/aos.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="css/jquery.timepicker.css" />
+
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/icomoon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <style>
+    /* Decorated links for Home and Shop */
+    .decorated-link {
+      position: relative;
+      color: #333; /* Set the link text color */
+      text-decoration: none;
+      transition: color 0.3s ease;
+      padding-right: 10px; /* Adjust this value to add spacing between text and decoration */
+    }
+  
+    .decorated-link:before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px; /* Adjust this value to change the decoration line's height */
+      background-color: #ff8c00; /* Set the decoration line color */
+      transition: width 0.3s ease;
+    }
+  
+    .decorated-link:hover {
+      color: #ff8c00; /* Set the link text color on hover */
+    }
+  
+    .decorated-link:hover:before {
+      width: 100%;
+    }
+  </style>
+  <style>
+    .pagination {
+      display: inline-block;
+    }
+    
+    .pagination a {
+      color: black;
+      float: left;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    
+    .pagination a.active {
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+    }
+    
+    .pagination a:hover:not(.active) {
+      background-color: #ddd;
+      border-radius: 5px;
+    }
+    </style>
+  <body class="goto-here">
+    <%- include("../layouts/userNav.ejs") %>
+
+    <!-- END nav -->
+    <div
+      class="hero-wrap hero-bread"
+      style="background-image: url('images/bg_1.jpg')"
+    >
+      <div class="container">
+        <div
+          class="row no-gutters slider-text align-items-center justify-content-center"
+        ></div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-4 mt-5 pl-4">
+      <div class="col-md-8 text-center">
+        <form
+          class="search-form d-flex align-items-center">
+          <div class="form-group mb-0 me-2 col-sm-8 col-md-9">
+            <input
+              type="text"
+              class="form-control form-control-lg border"
+              name="search"
+              placeholder="Search for products..."
+              value="<%= search %>"
+            />
+            <input type="hidden" name="cat" value="<%= cat %>" id=""/>   
+          </div>
+          <button type="submit" class="btn btn-primary btn-md">Search</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 mb-5 text-center">
+            <ul class="product-category">
+              <li><a <% if (!cat){%>class="active"<%}%> href="/shop">All</a></li>
+              <% category.forEach((item)=>{%>
+              <li>
+                <a <% if ( item._id == cat ){%> class="active"<%}%> href="/shop?cat=<%=item._id  %>&search=<%= search  %>"
+                  ><%=item.name %></a
+                >
+              </li>
+              <%}) %>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <% for(let product of products){ const category = product.category;
+          if(category.status === true){ %>
+          <div
+            class="col-6 col-md-6 col-lg-3 ftco-animate product-item"
+            data-category="<%= product.category.name %>"
+          >
+            <div class="product">
+              <a href="/singleProduct?id=<%= product._id %>" class="img-prod">
+                <img
+                  class="img-fluid"
+                  src="/productImages/resized/<%= product.image[0] %>"
+                  alt="Colorlib Template"
+                />
+                <div class="overlay"></div>
+              </a>
+              <input type="hidden" id="product-<%= product._id %>" value="<%= product.quantity %>">
+              <div class="text py-3 pb-4 px-3 text-center">
+                <h3><a href=""><%= product.title %></a></h3>
+                <% if (product.category.name !== 'Juices') { %>
+                <div class="d-flex">
+                  <div class="pricing">
+                    <p class="price">
+                      <span class="price-sale"
+                        ><i class="fas fa-rupee-sign"></i> <%= product.price
+                        %>/Kg</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <% }%>
+                <div class="bottom-area d-flex px-3">
+                  <div class="m-auto d-flex">
+                    <a
+                      href="#"
+                      class="add-to-cart d-flex justify-content-center align-items-center text-center"
+                    >
+                      <span><i class="ion-ios-menu"></i></span>
+                    </a>
+                    <a
+                      href=""
+                      onclick="addToCart('<%= product._id %>', 1 ,'<%=product.price %>')"
+                      class="buy-now d-flex justify-content-center align-items-center mx-1"
+                    >
+                      <span><i class="ion-ios-cart"></i></span>
+                    </a>
+                    <a
+                      href="#"
+                      onclick="addToWishlist('<%= product._id %>')"
+                      class="heart d-flex justify-content-center align-items-center"
+                    >
+                      <span><i class="ion-ios-heart"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } }%>
+        </div>
+        <div class="row">
+          <% if ( products.length> 0 ){%>         
+          <div class="col-lg-12">
+              <div class="pagination d-flex justify-content-center">
+                <% if( currentPage !== 1 ) { %> 
+                    <a href="/shop?page=1<% if (cat){%>&&cat=<%= cat %><% } %><% if (search){%>&search=<%= search %><% } %>">1</a>
+                <% } %>
+                
+                <% if( currentPage > 2 ) { %>
+                    <a href="/shop?page=<%= prevPage %><% if (cat){%>&cat=<%= cat %><% } %><% if (search){%>&search=<%= search %><% } %>"><%= prevPage %></a> 
+                <% } %>
+                <a href="/shop?page=<%= currentPage %><% if (cat){%>&cat=<%= cat %><% } %><% if (search){%>&search=<%= search %><% } %>" class="active"><%= currentPage %></a>
+                <% if( hasNextPage ) { %>
+                    <a href="/shop?page=<%= nextPage %><% if (cat){%>&cat=<%= cat %><% } %><% if (search){%>&search=<%= search %><% } %>"><%= nextPage %></a> 
+                <% } %>
+                    
+                <% if( nextPage !== lastPage && currentPage !== lastPage && lastPage !== 0 ) { %>
+                    <a href="/shop?page=<%= lastPage %><% if (cat){%>&cat=<%= cat %><% } %><% if (search){%>&search=<%= search %><% } %>"><%= lastPage %></a>
+                <% } %>
+                </div>
+              </div>
+            <%}%>
+            </div>
+      </div>
+    </section>
+
+    <%- include("../layouts/userFooter.ejs") %>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const user = "<%=user%>";
+      const addToCart = async (productId, quantity, singlePrice) => {
+        try {
+          event.preventDefault();
+          const totalStock = document.getElementById(`product-${productId}`).value
+          if (user) {
+            const productData = await axios.post("/addToCart", {
+              productId,
+              quantity,
+              singlePrice,
+              totalStock
+            });
+           
+            if(productData.data.count){
+                  document.getElementById("cartCount").innerHTML=`<span class="icon-shopping_cart" ></span>${productData.data.count}`
+                  swal("Added to cart", "", "success");
+            }
+            if(productData.data.message){
+                swal("Added to cart", "", "success");
+              }
+              
+              if(productData.data.cartMessage){
+                swal("Cart quantity reaches the limit");
+              }   
+            return productData;
+          } else {
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      const addToWishlist = async (productId) => {
+        try {
+          event.preventDefault();
+          if (user) {
+            const wishlistData = await axios.put("/wishlist", { productId });
+
+            swal("Added to wishlist", "", "success");
+            if (wishlistData.data.success === false) {
+              swal("Product already exist in the wishlist");
+            }
+            const {count} = wishlistData.data
+            if(count || count ===0){
+              document.getElementById("wishlistCount").innerHTML = `<span><i class="ion-ios-heart"></i></span>${count}`
+            }
+          } else {
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+    </script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="js/google-map.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

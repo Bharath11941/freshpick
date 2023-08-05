@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fresh Pick</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg" />
+    <style>
+      body {
+        background-color: #f8f8f8;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        text-align: center;
+        margin-top: 100px;
+      }
+
+      .success-message {
+        color: #32cd32;
+      }
+
+      .success-image {
+        width: 150px;
+        margin-top: 30px;
+      }
+
+      .success-details {
+        font-size: 18px;
+        margin-top: 20px;
+      }
+
+      .order-id {
+        font-weight: bold;
+      }
+
+      .order-total {
+        font-weight: bold;
+        color: #ff4500;
+      }
+
+      .continue-shopping-btn {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .continue-shopping-btn:hover {
+        background-color: #0056b3;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="success-message font-weight-bold">
+        Order Successfully Placed!
+      </h1>
+      <img
+        src="https://media.istockphoto.com/id/882905872/vector/order-success-icon.jpg?s=170667a&w=0&k=20&c=O442rcdNvFkJsaw_voc4IXGYEvfRyU4a6AXiwavnvxc="
+        alt="Order Success"
+        class="success-image"
+      />
+      <p class="success-details">
+        Thank you for your order! Your order has been successfully placed and
+        will be shipped to you soon.
+      </p>
+      <p class="success-details">
+        Order ID: <span class="order-id"><%=order._id  %></span>
+      </p>
+      <p class="success-details">
+        Track your order Below<span class="order-total"></span>
+      </p>
+      
+
+      <a href="/orderedList" class="continue-shopping-btn">view orders</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>

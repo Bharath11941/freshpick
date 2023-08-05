@@ -1,0 +1,137 @@
+<%- include("../layouts/header.ejs") %>
+
+<%- include("../layouts/userNav.ejs") %>
+
+<!-- END nav -->
+
+<!--================Login Box Area =================-->
+<section class="login_box_area section-margin mt-5 mb-4">
+  <div class="container">
+    <div class="row">
+      <div
+        class="col-lg-6"
+        style="background-color: #c7e5c3; padding: 20px; color: #333"
+      >
+        <div class="login_box_img">
+          <div class="hover">
+            <h4 style="font-weight: bold; color: #333">New to our website?</h4>
+            <p>
+              There are advances being made in science and technology every day,
+              and a good example of this is the
+            </p>
+            <a
+              class="button button-account"
+              href="/register"
+              style="
+                background-color: #ff6b6b;
+                color: #fff;
+                border-radius: 20px;
+                padding: 10px 20px;
+                text-decoration: none;
+              "
+              >Create an Account</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div
+          class="login_form_inner"
+          style="background-color: #fff; padding: 40px; border-radius: 8px"
+        >
+          <h3 style="color: #333; font-weight: bold; margin-bottom: 30px">
+            Discover the Natural Goodness
+          </h3>
+          <% if(typeof succMessage !== 'undefined'){ %>
+          <p style="color: #4caf50; margin-top: -10px"><%= succMessage %></p>
+          <% } %> <% if(typeof errMessage !== 'undefined'){ %>
+          <p style="color: #f44336; margin-top: -10px"><%= errMessage %></p>
+          <% } %>
+          <form
+            class="row login_form"
+            action=""
+            id="contactForm"
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
+            <div class="col-md-12 form-group">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Username"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Username'"
+                required
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Password"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Password'"
+                required
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <button
+                type="submit"
+                value="submit"
+                class="button button-login w-100"
+                style="
+                  background-color: #4caf50;
+                  color: #fff;
+                  font-weight: bold;
+                  border-radius: 4px;
+                  padding: 12px 20px;
+                "
+              >
+                Log In
+              </button>
+              <a
+                href="/forgetPassword"
+                style="color: #999; margin-top: 10px; display: inline-block"
+                >Forgot Password?</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--================End Login Box Area =================-->
+
+<%- include("../layouts/userFooter.ejs") %>
+
+<script>
+  const emailInput = document.getElementById("email");
+  emailInput.addEventListener("input", () => {
+    let email = emailInput.value.trim();
+    if (email === "") {
+      emailInput.setCustomValidity("Email cannot be null");
+    } else {
+      emailInput.setCustomValidity("");
+    }
+  });
+
+  const passwordInput = document.getElementById("password");
+  passwordInput.addEventListener("input", () => {
+    const password = passwordInput.value.trim();
+
+    if (password.length < 6) {
+      passwordInput.setCustomValidity("Password is less than 6");
+    } else {
+      passwordInput.setCustomValidity("");
+    }
+  });
+</script>
+
+<%- include("../layouts/footer.ejs") %>

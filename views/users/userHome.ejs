@@ -1,0 +1,305 @@
+<%- include("../layouts/header.ejs") %>
+ <%- include("../layouts/userNav.ejs") %>
+<!-- END nav -->
+<% if(banner && banner.length>0){ %>
+  <% if(banner[0].status === true){ %>
+<section id="home-section" class="hero">
+  <div class="home-slider owl-carousel">
+    <div class="slider-item col-12" style="background-image: url(/Banner/<%=banner[0].image[0]%>)">
+      <div class="overlay"></div>
+      <div class="container">
+        <div
+          class="row slider-text justify-content-center align-items-center"
+          data-scrollax-parent="true"
+        >
+          <div class="col-md-12 ftco-animate text-center">
+            <h1 class="mb-2"><%=banner[0].title%></h1>
+            <h2 class="subheading mb-4">
+              <%=banner[0].description%>
+            </h2>
+            <p><a href="/shop" class="btn btn-primary">Shop now</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slider-item" style="background-image: url(/Banner/<%=banner[0].image[1]%>)">
+      <div class="overlay"></div>
+      <div class="container">
+        <div
+          class="row slider-text justify-content-center align-items-center"
+          data-scrollax-parent="true"
+        >
+          <div class="col-sm-12 ftco-animate text-center">
+            <h1 class="mb-2"><%=banner[0].title%></h1>
+            <h2 class="subheading mb-4">
+              <%=banner[0].description%>
+            </h2>
+            <p><a href="#" class="btn btn-primary">View Details</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+<% } %>
+<section class="ftco-section">
+  <div class="container">
+    <div class="row no-gutters ftco-services">
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div
+            class="icon bg-color-1 active d-flex justify-content-center align-items-center mb-2"
+          >
+            <span class="flaticon-shipped"></span>
+          </div>
+          <div class="media-body">
+            <h3 class="heading">Free Shipping</h3>
+            <span>On order over $100</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div
+            class="icon bg-color-2 d-flex justify-content-center align-items-center mb-2"
+          >
+            <span class="flaticon-diet"></span>
+          </div>
+          <div class="media-body">
+            <h3 class="heading">Always Fresh</h3>
+            <span>Product well package</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div
+            class="icon bg-color-3 d-flex justify-content-center align-items-center mb-2"
+          >
+            <span class="flaticon-award"></span>
+          </div>
+          <div class="media-body">
+            <h3 class="heading">Superior Quality</h3>
+            <span>Quality Products</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div
+            class="icon bg-color-4 d-flex justify-content-center align-items-center mb-2"
+          >
+            <span class="flaticon-customer-service"></span>
+          </div>
+          <div class="media-body">
+            <h3 class="heading">Support</h3>
+            <span>24/7 Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ftco-section ftco-category ftco-no-pt">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-6 order-md-last align-items-stretch d-flex">
+            <div
+              class="category-wrap-2 ftco-animate img align-self-stretch d-flex"
+              style="background-image: url(images/category.jpg)"
+            >
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="category-wrap ftco-animate img mb-4 d-flex align-items-end"
+              style="background-image: url(images/category-1.jpg)"
+            >
+              <div class="text px-3 py-1">
+                <h2 class="mb-0"><a href="#">Vegetables</a></h2>
+              </div>
+            </div>
+            <div
+              class="category-wrap ftco-animate img d-flex align-items-end"
+              style="background-image: url(images/category-2.jpg)"
+            >
+              <div class="text px-3 py-1">
+                <h2 class="mb-0"><a href="#">Fruits</a></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div
+          class="category-wrap ftco-animate img mb-4 d-flex align-items-end"
+          style="background-image: url(images/category-3.jpg)"
+        >
+          <div class="text px-3 py-1">
+            <h2 class="mb-0"><a href="#">Juices</a></h2>
+          </div>
+        </div>
+        <div
+          class="category-wrap ftco-animate img d-flex align-items-end"
+          style="background-image: url(images/category-4.jpg)"
+        >
+          <div class="text px-3 py-1">
+            <h2 class="mb-0"><a href="#">Dried</a></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center mb-3 pb-3">
+      <div class="col-md-12 heading-section text-center ftco-animate">
+        <span class="subheading">Featured Products</span>
+        <h2 class="mb-4">Our Products</h2>
+        <p>
+          Welcome to our collection of featured products! Explore a world of nature's finest offerings, organic vegetables, fresh fruits, and delightful dried fruits
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <!-- Start -->
+      <% for (let i = 0; i < 8 && i < products.length; i++) { const category =
+      products[i].category; if (category && category.status === true) { %>
+      <div class="col-6 col-md-6 col-lg-3 ftco-animate">
+        <div class="product">
+          <a href="/singleProduct?id=<%=products[i]._id %>" class="img-prod">
+            <img
+              class="img-fluid"
+              src="/productImages/resized/<%=products[i].image[0] %>"
+              alt="Colorlib Template"
+            />
+
+            <div class="overlay"></div>
+          </a>
+          <div class="text py-3 pb-4 px-3 text-center">
+            <h3><a href="#"><%= products[i].title %></a></h3>
+            <div class="d-flex">
+              <div class="pricing">
+                <p class="price">
+                  <% if (products[i].category.name !== 'Juices') { %>
+                    <span class="price-sale">₹<%=products[i].price %></span>/kg
+                    <% } else{%>
+                      <span class="price-sale">₹<%=products[i].price %></span>/Bottle
+                  <%}%>
+                  
+                </p>
+              </div>
+            </div>
+            <input type="hidden"  id="product-<%=products[i]._id %>" value="<%=products[i].quantity %>">
+            <div class="bottom-area d-flex px-3">
+              <div class="m-auto d-flex">
+                <a
+                  href="#"
+                  class="add-to-cart d-flex justify-content-center align-items-center text-center"
+                >
+                  <span><i class="ion-ios-menu"></i></span>
+                </a>
+                <a
+                  href=""
+                  onclick="addToCart('<%=products[i]._id %>', 1 ,'<%=products[i].price %>')"
+                  class="buy-now d-flex justify-content-center align-items-center mx-1"
+                >
+                  <span><i class="ion-ios-cart"></i></span>
+                </a>
+                <a
+                  href="#"
+                  onclick="addToWishlist('<%= products[i]._id %>')"
+                  class="heart d-flex justify-content-center align-items-center"
+                >
+                  <span><i class="ion-ios-heart"></i></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } }%>
+      <!-- End of product -->
+    </div>
+  </div>
+</section>
+
+
+
+<%- include("../layouts/userFooter.ejs") %>
+
+<%- include("../layouts/footer.ejs") %>
+<script>
+  const user = "<%=user%>";
+  
+      const addToCart = async (productId, quantity, singlePrice) => {
+        try {
+          event.preventDefault();
+          const totalStock = document.getElementById(`product-${productId}`).value
+          console.log(totalStock);
+          if (user) {
+            const productData = await axios.post("/addToCart", {
+              productId,
+              quantity,
+              singlePrice,
+              totalStock
+            });
+            
+            if(productData.data.count){
+                  document.getElementById("cartCount").innerHTML=`<span class="icon-shopping_cart" ></span>${productData.data.count}`
+                  swal("Added to cart", "", "success");
+            }   
+            if(productData.data.message){
+                swal("Added to cart", "", "success");
+              }
+              
+              if(productData.data.cartMessage){
+                swal("Cart quantity reaches the limit");
+              }
+            return productData;
+          } else {
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(()=>{
+              window.location.href = "/login";
+            });
+            
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };const addToWishlist = async (productId) =>{
+        try {
+          event.preventDefault()
+          if(user){
+            const wishlistData = await axios.put("/wishlist",{productId})
+            swal("Added to wishlist", "", "success");
+            if(wishlistData.data.success === false){
+              swal("Product already exist in the wishlist");
+            }
+            const {count} = wishlistData.data
+            if(count || count ===0){
+              document.getElementById("wishlistCount").innerHTML = `<span><i class="ion-ios-heart"></i></span>${count}`
+            }
+          }else{
+            swal({
+              title: "Please Login And Explore Our Products",
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+</script>

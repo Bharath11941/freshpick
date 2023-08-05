@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fresh Pick</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <style>
+      .btn-custom {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="screen-overlay"></div>
+    <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+      <section class="content-main">
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Product Image</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orderDetails.products.forEach((product) => { %>
+              <tr>
+                <td>
+                  <img src="/productImages/resized/<%= product.productId.image[0] %>" class="img-md img-fluid img-thumbnail" alt="Product Image">
+                </td>
+                <td><%= product.productId.title %></td>
+                <td><%= product.quantity %></td>
+                <td>$<%= product.productId.price %></td>
+                <td><%= orderDetails.method %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        
+      </section>
+      
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+  </body>
+</html>

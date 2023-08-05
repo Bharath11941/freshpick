@@ -1,0 +1,50 @@
+<%- include("../layouts/header.ejs") %>
+<%- include("../layouts/userNav.ejs") %>
+
+<div class="container mt-4">
+  <div class="d-flex align-items-center justify-content-between">
+    <h3></h3>
+    <a href="/userProfile" class="btn btn-md btn-success mt-3">Back</a>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h3>Wallet History</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% walletData.forEach((wallet) => { %>
+              <tr>
+                <td><%= wallet.walletHistory.date.toISOString().substr(0, 10) %></td>
+                <% if (wallet.walletHistory.amount > 0) { %>
+                  <td class="text-success">₹<%= wallet.walletHistory.amount %></td>
+                <% } else { %>
+                  <td class="text-danger">₹<%= wallet.walletHistory.amount %></td>
+                <% } %>
+                <td><%= wallet.walletHistory.description %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<%- include("../layouts/userFooter.ejs") %>
+
+<!-- Include Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<%- include("../layouts/footer.ejs") %>

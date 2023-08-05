@@ -1,0 +1,202 @@
+<%- include("../layouts/header.ejs") %>
+<style>
+ .empty-wishlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
+.empty-wishlist-content {
+  text-align: center;
+}
+
+.empty-wishlist-content h3 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.empty-wishlist-content p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.empty-wishlist-content .btn {
+  font-size: 16px;
+}
+
+
+</style>
+ <%- include("../layouts/userNav.ejs") %>
+    <!-- END nav -->
+
+
+    <section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<div class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+              <%if(wishlist.length>0){%>
+	    				<table class="table" id="wishlist-table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th>&nbsp;</th>
+						        <th>Product List</th>
+						        <th>&nbsp;</th>
+						        <th>Price</th>
+						        <th>Stock status</th>
+                    <th>&nbsp;</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+                  <%
+                   wishlist.forEach((product)=>{ %>
+                      <tr class="text-center" id="deleteId-<%=product._id %>">
+						        <td  class="product-remove"><a href="" onclick="deleteWishlist('<%=product._id%>')"><span class="ion-ios-close"></span></a></td>
+						        
+						        <td class="image-prod">
+                       <% if (product.productId.image.length > 0) { %>
+                         <div class="border" style="display: inline-block;">
+                           <img src="/productImages/resized/<%= product.productId.image[0] %>" alt="Product Image" class="img-fluid img">
+                         </div>
+                       <% } %>
+                    </td>
+						        
+						        <td class="product-name">
+						        	<h3><%= product.productId.title %></h3>
+						        	<p><%= product.productId.description %></p>
+						        </td>
+						        
+						        <td class="price"><%= product.productId.price %></td>
+						        
+						        <td class="quantity">
+                      <%if(product.productId.quantity>0){%>
+                        <h6 class="text-success">In Stock</h6>
+                        <% }else{%>
+                        <h6 class="text-danger">Out Of Stock</h6>
+                      <% } %>
+					          </td>
+						        <input type="hidden" name="" id="product-<%=product.productId._id%>" value="<%= product.productId.quantity%>">
+						        <td class="total">
+                      <p>Added on <%=product.date.toDateString()  %></p>
+                      <a href=""
+                      onclick="addToCart('<%=product.productId._id%>',1,'<%= product.productId.price%>')"
+                       class="btn btn-success">Add to cart</a>
+                    </td>
+						      </tr><!-- END TR-->
+                  <% })
+                    %>
+
+						    </tbody>
+						  </table>
+              <% }else{%>
+                <div class="empty-wishlist" id="empty-wishlists">
+                  <div class="empty-wishlist-content">
+                    <h3>Your Wishlist is Empty</h3>
+                    <p>Start exploring our products and add items to your wishlist!</p>
+                    <a href="/shop" class="btn btn-primary">Browse Products</a>
+                  </div>
+                </div>
+              <%}%>  
+              <div class="empty-wishlist" id="empty-wishlist" style="display: none;">
+                  <div class="empty-wishlist-content">
+                    <h3>Your Wishlist is Empty</h3>
+                    <p>Start exploring our products and add items to your wishlist!</p>
+                    <a href="/shop" class="btn btn-primary">Browse Products</a>
+                  </div>
+                </div>    
+					  </div>
+    			</div>
+    		</div>
+			</div>
+		</section>
+    <%- include("../layouts/userFooter.ejs") %>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script>
+  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+      const addToCart = async (productId, quantity, singlePrice) => {
+        try {
+          event.preventDefault();
+          const totalStock = document.getElementById(`product-${productId}`).value
+              const productData = await axios.post("/addToCart", {
+                productId,
+                quantity,
+                singlePrice,
+                totalStock
+              });
+              
+              if(productData.data.count){
+                  document.getElementById("cartCount").innerHTML=`<span class="icon-shopping_cart" ></span>${productData.data.count}`
+                  swal("Added to cart", "", "success"); 
+              } 
+              if(productData.data.message){
+                swal("Added to cart", "", "success");
+              }
+              
+              if(productData.data.cartMessage){
+                swal("Cart quantity reaches the limit");
+              }     
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+		const deleteWishlist = async (wishlistId) => {
+      try {
+        event.preventDefault()
+      swal({
+            title: "Delete wishlist product",
+            text: "Are you sure you want to delete?",
+            icon: "warning",
+            buttons: ["Cancel", "OK"],
+            dangerMode: true,
+          }).then(async (willDelete) => {
+            if (willDelete) {
+              // User clicked "OK" button, perform the delete action
+              const deleteItem = await axios.patch('/deleteWishlist',{wishlistId})
+              if(deleteItem.data.success){
+                const elementToRemove = document.getElementById(`deleteId-${wishlistId}`);
+                elementToRemove.parentNode.removeChild(elementToRemove);
+              }
+                const table = document.getElementById('wishlist-table');
+                const emptyWishlistDiv = document.getElementById('empty-wishlist');
+                
+                
+                if (deleteItem.data.length === 0) {
+                  document.getElementById("wishlistCount").innerHTML = `<span><i class="ion-ios-heart"></i></span>${deleteItem.data.length}`
+                  table.style.display = 'none';
+                  emptyWishlistDiv.style.display = 'block';
+                  
+                }
+                const {length} = deleteItem.data
+                if(length){
+                document.getElementById("wishlistCount").innerHTML = `<span><i class="ion-ios-heart"></i></span>${length}`
+                } 
+            }
+          });
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+	</script>
+    
+  </body>
+</html>

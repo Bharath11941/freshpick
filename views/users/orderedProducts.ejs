@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fresh Pick</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+
+    <link rel="stylesheet" href="css/aos.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="css/jquery.timepicker.css" />
+
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/icomoon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Decorated links for Home and Shop */
+      .decorated-link {
+        position: relative;
+        color: #333; /* Set the link text color */
+        text-decoration: none;
+        transition: color 0.3s ease;
+        padding-right: 10px; /* Adjust this value to add spacing between text and decoration */
+      }
+    
+      .decorated-link:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px; /* Adjust this value to change the decoration line's height */
+        background-color: #ff8c00; /* Set the decoration line color */
+        transition: width 0.3s ease;
+      }
+    
+      .decorated-link:hover {
+        color: #ff8c00; /* Set the link text color on hover */
+      }
+    
+      .decorated-link:hover:before {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="goto-here">
+    <%- include("../layouts/userNav.ejs") %>
+
+
+    <div class="card-container">
+      <% order.products.forEach((product) => { %>
+        <div class="card my-5 mx-4 text-center" style="width: 18rem; display: inline-block;">
+          <img class="card-img-top" src="/productImages/resized/<%= product.productId.image[0] %>" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title"><%= product.productId.title %></h5>
+            <h5>₹ <%= product.productId.price %></h5>
+            <h5>Quantity: <%= product.quantity %></h5>
+            <% if (order.status !== "Cancelled" && order.status !== "Return Pending") { %>
+            <h6 class="text-success">Status: <%= order.status %></h6>
+            <% } else { %>
+              <h6 class="text-danger">Status: <%= order.status %></h6>
+              <% } %> 
+            <a href="/shop" class="btn btn-primary">Shop more</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    
+    
+
+
+
+  <%- include("../layouts/userFooter.ejs") %>
+    <script src="js/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/google-map.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- <script>
+      const cancelOrderHelper = async (orderId) => {
+        try {
+          event.preventDefault();
+          swal({
+            title: "Cancel Order",
+            text: "Are you sure you want to cancel this order?",
+            icon: "warning",
+            buttons: ["Cancel", "OK"],
+            dangerMode: true,
+          }).then(async (willDelete) => {
+            if (willDelete) {
+              // User clicked "OK" button, perform the delete action
+              const details = await axios.patch("/cancelOrder", { orderId });
+
+              if (details.data.success) {
+                document.getElementById(`statusChange-${orderId}`).textContent =
+                  details.data.status;
+                const remove = document
+                  .getElementById(`cancelButton-${orderId}`)
+                  .querySelector(".buttonCancel");
+                remove.parentNode.removeChild(remove);
+              }
+            }
+          });
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+    </script> -->
+  </body>
+</html>

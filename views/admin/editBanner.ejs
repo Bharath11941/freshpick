@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fresh Pick</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div class="screen-overlay"></div>
+    <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+      <section class="content-main">
+        <div class="row">
+          <div class="col-9">
+            <div class="content-header">
+              <h2 class="content-title">Edit Banner</h2>
+            </div>
+          </div>
+          <div class="col-12 col-sm-9">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h4>Basic</h4>
+              </div>
+              <div class="card-body">
+                <form
+                  action="/admin/editBanner"
+                  method="post"
+                  enctype="multipart/form-data"
+                >
+                  <div class="mb-4">
+                    <label for="product_name" class="form-label"
+                      >Product title</label
+                    >
+                    <input
+                      type="text"
+                      placeholder="Type here"
+                      name="title"
+                      value="<%=banner.title %>"
+                      class="form-control"
+                      id="product_title"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Full description</label>
+                    <textarea
+                      id="description"
+                      placeholder="Type here"
+                      name="description"
+                      class="form-control"
+                      rows="4"
+                      required
+                    ><%=banner.description %></textarea
+                    >
+                  </div>
+                  <input type="hidden" name="id" value="<%= banner._id %>" />
+                  <div class="col-lg-12">
+                    <div class="card mb-4">
+                      <div class="card-header">
+                        <h4>Media</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <% for (let i = 0; i < banner.image.length; i++) { %>
+                          <div class="col-3" id="pdtImage">
+                            <div class="image-container">
+                              <img
+                                class="img-fluid img-thumbnail"
+                                id="prdtimage_<%= i %>"
+                                src="/Banner/<%= banner.image[i] %>"
+                                alt=""
+                              />
+                              <a
+                                href="#"
+                                onclick="deleteImg(event, '<%= banner.image[i] %>', '<%= banner._id %>')"
+                                class="btn btn-danger btn-sm delete-button mb-3"
+                                >Delete</a
+                              >
+                            </div>
+                          </div>
+                          <% } %>
+                        </div>
+                        <div class="input-upload">
+                          <input
+                            class="form-control"
+                            type="file"
+                            name="image"
+                            id="imageInput"
+                            multiple
+                            onchange="viewImage(event)"
+                            accept="image/*"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- card end// -->
+                  </div>
+                  <div>
+                    <button
+                      class="btn btn-md rounded font-sm hover-up"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- card end// -->
+          </div>
+        </div>
+      </section>
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      function viewImage(event) {
+        document.getElementById("prdtimage").src = URL.createObjectURL(
+          event.target.files[0]
+        );
+        document.getElementById("imageInput").value =
+          event.target.files[0].name;
+      }
+      const deleteImg = async (event, img, bannerId) => {
+        try {
+          event.preventDefault();
+          const deleted = await axios.put("/admin/deleteBannerImage", {
+            img,
+            bannerId,
+          });
+          if (deleted) {
+            Swal.fire("Successfully deleted", "", "success");
+
+            const imageContainer = event.target.parentNode.parentNode;
+            imageContainer.style.display = "none";
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+
+    </script>
+    <script>
+      const productTitle = document.getElementById("product_title");
+      productTitle.addEventListener("input", () => {
+        let titleValue = productTitle.value.trim();
+        if (titleValue === "") {
+          productTitle.setCustomValidity("Title cannot be empty");
+        } else {
+          productTitle.setCustomValidity("");
+        }
+      });
+
+      const description = document.getElementById("description");
+      description.addEventListener("input", () => {
+        let descriptionValue = description.value.trim();
+        if (descriptionValue === "") {
+          description.setCustomValidity("Description cannot be empty");
+        } else {
+          description.setCustomValidity("");
+        }
+      });
+    </script>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+  </body>
+</html>

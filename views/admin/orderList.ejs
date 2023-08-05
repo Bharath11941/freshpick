@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fresh Pick</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+  </head>
+
+  <body>
+    <div class="screen-overlay"></div>
+    <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+      <section class="content-main">
+        <div class="content-header">
+          <div class="d-flex align-items-center">
+            <h2 class="content-title card-title">Orders List</h2>
+            <div class="col-search">
+              <form class="searchform ml-15">
+                <div class="input-group">
+                  <input
+                    list="search_terms"
+                    type="text"
+                    name="search"
+                    value="<%=search  %>"
+                    class="form-control col-lg-6"
+                    style="width: 300px;"
+                    placeholder="Search Orders by Payment method "
+                  />
+                  <button class="btn btn-light bg" type="submit" >
+                    <i class="material-icons md-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <!-- card-header end// -->
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Payment Method</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Delivery Date</th>
+                    <th scope="col">view details</th>
+                    <th scope="col" class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if(orderData.length>0) { 
+                    orderData.forEach(order => { %>
+                      <tr id="status-<%= order._id %>">
+                        <td><%= order._id %></td>
+                        <td><b><%= order.user.fname %></b></td>
+                        <td><%= order.method %></td>
+                        <td><%= order.total %></td>
+                        <td>
+                          <span class="badge rounded-pill alert-warning status-badge">
+                            <%= order.status %>
+                          </span>
+                        </td>
+                        <td><%= order.date %></td>
+                        <td>
+                          <% if (order.status !== "Delivered" && order.status !== "Cancelled" && order.status !== "Return Approved" && order.status !== "Return Pending") { %>
+                            <input
+                              type="date"
+                              class="form-control deliveryDateInput "
+                              value="<%= order.expectedDelivery ? order.expectedDelivery.toISOString().substr(0, 10) : '' %>"
+                              onchange="updateDeliveryDateHelper(this.value, '<%= order._id %>')"
+                            >
+                          <% } else if(order.status === "Delivered" || order.status === "Return Approved" || order.status === "Return Pending") { %>
+                            <span class="badge rounded-pill alert-success ">
+                              <%= order.status %>
+                            </span>
+                          <% }else if(order.status ==="Cancelled"){%>
+                            <span class="badge rounded-pill alert-danger">
+                              <%= order.status %>
+                          </span>
+                          <% } %>
+                        </td>
+                        <td>
+                        <a href="/admin/orderDetails?id=<%= order._id %>" class="btn btn-xs p-0 pb-1 pt-1 "> View details</a>
+                      </td>
+                        <td class="text-end">
+                          <% if (order.status !== "Delivered" && order.status !== "Cancelled" && order.status !== "Return Approved") { %>
+                            <a href="#" class="btn btn-xs rounded font-xs  cancelButton" onclick="cancelOrderHandler('<%= order._id %>', event)">
+                              <i class="fas fa-trash-alt"></i>
+                            </a>
+                            <%if(order.status==="Pending"){%>
+                              <div class="dropdown selectRemove">
+                              <select class="btn btn-light rounded btn-xs p-0 pb-1 pt-1 font-sm selectRemove"
+                                id="updateDropdown"
+                                onchange="updateStatus(this.value, '<%= order._id %>')">
+                                <option value="" selected disabled>Update</option>
+                                <option value="Placed">Placed</option>
+                                <option value="Shipped">Shipped</option>
+                                <option value="Delivered">Delivered</option>
+                              </select>
+                            </div>
+                              <%}else if(order.status==="Placed"){%>
+                                <div class="dropdown selectRemove">
+                              <select class="btn btn-light rounded btn-xs p-0 pb-1 pt-1 font-sm selectRemove"
+                                id="updateDropdown"
+                                onchange="updateStatus(this.value, '<%= order._id %>')">
+                                <option value="" selected disabled>Update</option>
+                                <option value="Shipped">Shipped</option>
+                                <option value="Delivered">Delivered</option> 
+                              </select>
+                            </div>
+                              <%}else if(order.status==="Shipped"){%> 
+                                <div class="dropdown selectRemove">
+                              <select class="btn btn-light rounded btn-xs p-0 pb-1 pt-1 font-sm selectRemove"
+                                id="updateDropdown"
+                                onchange="updateStatus(this.value, '<%= order._id %>')">
+                                <option value="" selected disabled>Update</option>
+                                <option value="Delivered">Delivered</option>
+                              </select>
+                            </div>
+                            <%}else{%>
+                              <div class="dropdown selectRemove">
+                              <select class="btn btn-light rounded btn-xs p-0 pb-1 pt-1 font-sm selectRemove"
+                                id="updateDropdown"
+                                onchange="updateStatus(this.value, '<%= order._id %>')">
+                                <option value="" selected disabled>Update</option>
+                                <option value="Return Approved">Return Approved</option>  
+                              </select>
+                            </div>
+                              <%}%>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }) } else { %>
+                      <tr>
+                        <td colspan="8">
+                          <p class="text-center">No Orders</p>
+                        </td>
+                      </tr>
+                    <% } %>
+                </tbody>
+              </table>
+              
+            </div>
+            <!-- table-responsive //end -->
+          </div>
+          <!-- card-body end// -->
+        </div>
+        <!-- card end// -->
+        <% if(totalPages > 1) { %>
+      <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-start">
+            <% if(req.query.page && parseInt(req.query.page) > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="/admin/orderList?page=<%= parseInt(req.query.page) - 1 %><% if (search){%>&search=<%= search %><% } %>">
+                <i class="material-icons md-chevron_left"></i>
+              </a>
+            </li>
+            <% } 
+              for(let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <% if(req.query.page && parseInt(req.query.page) === i) { %>active<% } %>">
+              <a class="page-link" href="/admin/orderList?page=<%= i %><% if (search){%>&search=<%= search %><% } %>"><%= i %></a>
+            </li>
+            <% } %>
+            <% if(req.query.page && parseInt(req.query.page) < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="/admin/orderList?page=<%= parseInt(req.query.page) + 1 %><% if (search){%>&search=<%= search %><% } %>">
+                <i class="material-icons md-chevron_right"></i>
+              </a>
+            </li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+      <% } %>
+      </section>
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const updateStatus = async (status, orderId) => {
+        try {
+          const updatedStatus = await axios.patch("/admin/updateStatus", {
+            status,
+            orderId,
+          });
+          if (updatedStatus.data.success) {
+            const statusElement = document
+              .getElementById(`status-${orderId}`)
+              .querySelector(".status-badge");
+            statusElement.innerHTML = status;
+            // if(status === "Delivered" || status === "Return Pending" || status === "Return Approved" ){
+            //   console.log(status);
+            //   const change = document.getElementById(`status-${orderId}`).querySelector('#change')
+            //   change.innerHTML = status
+            // }
+            if (status === "Delivered" || status === "Return Pending" || status === "Return Approved") {
+          const cancelButton = document.getElementById(`status-${orderId}`).querySelector('.cancelButton');
+          cancelButton.parentNode.removeChild(cancelButton);
+          
+          const selectOption = document.getElementById(`status-${orderId}`).querySelector('.selectRemove');
+          selectOption.parentNode.removeChild(selectOption);
+        }
+
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+
+      const updateDeliveryDateHelper = async (date,orderId) => {
+        try {
+          const updatedDate = await axios.patch("/admin/updatedDate",{
+            date,
+            orderId
+          })
+          if(updatedDate.data.success){
+            const inputElem = document.getElementById(`status-${orderId}`).querySelector(".deliveryDateInput")
+            inputElem.value = date
+
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+    </script>
+    <script>
+      const cancelOrderHandler = async (orderId) => {
+        try {
+          event.preventDefault();
+          const status = "Cancelled";
+          swal({
+            title: "Cancel order product",
+            text: "Are you sure  want to cancel?",
+            icon: "warning",
+            buttons: ["Cancel", "OK"],
+            dangerMode: true,
+          }).then(async (willDelete) => {
+            if (willDelete) {
+              const cancelItem = await axios.put("/admin/cancelOrder", {
+            orderId,
+            status,
+          });
+          if (cancelItem.data.success) {
+            console.log("success");
+            const elementToRemove = document
+              .getElementById(`status-${orderId}`)
+              .querySelector(".cancelButton");
+            elementToRemove.parentNode.removeChild(elementToRemove);
+            const selectOption = document.getElementById(`status-${orderId}`).querySelector('.selectRemove');
+          selectOption.parentNode.removeChild(selectOption);
+            const statusElement = document
+              .getElementById(`status-${orderId}`)
+              .querySelector(".status-badge");
+            statusElement.innerHTML = status;
+          }
+              
+            }
+          });
+          
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+    </script>
+  </body>
+</html>

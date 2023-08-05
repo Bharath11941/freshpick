@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fresh Pick</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <style>
+      .btn-custom {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="screen-overlay"></div>
+    <%- include("../layouts/adminSidebar.ejs") %>
+    <main class="main-wrap">
+      <%- include("../layouts/adminNavbar.ejs") %>
+      <section class="content-main">
+        <div class="content-header">
+          <div class="d-flex align-items-center">
+            <h2 class="content-title card-title">Categories</h2>
+            
+            <div class="col-search">
+              <form class="searchform ml-15">
+                <div class="input-group">
+                  <input
+                    list="search_terms"
+                    type="text"
+                    name="search"
+                    value="<%=search  %>"
+                    class="form-control col-lg-6"
+                    style="width: 300px"
+                    placeholder="Search Categories"
+                  />
+                  <button class="btn btn-light bg" type="submit">
+                    <i class="material-icons md-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <form action="/admin/addCategory" method="post" onsubmit="return validateForm()">
+                  <% if(typeof errMessage !== 'undefined'){ %>
+                  <p style="color: #f44336; margin-top: -10px">
+                    <%= errMessage %>
+                  </p>
+                  <% } %>
+                  <div class="mb-4">
+                    <label for="product_name" class="form-label">Name</label>
+                    <input
+                      type="text"
+                      placeholder="Type here"
+                      name="name"
+                      class="form-control"
+                      id="product_name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea
+                      placeholder="Type here"
+                      name="description"
+                      class="form-control"
+                      id="description"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="d-grid">
+                    <button class="btn btn-primary">Create category</button>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-9">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th class="text-end">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if(categories.length>0) { %>
+                      <% categories.forEach(category => { %>
+                      <tr>
+                        <td><b><%= category.name %></b></td>
+                        <td><%= category.description %></td>
+                        <td class="text-end">
+                          <a
+                            href="/admin/editCategory?id=<%= category._id %>"
+                            class="btn btn-danger btn-custom"
+                            >Edit</a
+                          >
+                          <% if(category.status==true){ %>
+                          <a
+                            href="/admin/unlistCategory?id=<%= category._id %>"
+                            class="btn btn-danger btn-custom"
+                            onclick="return confirm('Are you really want to Unlist <%= category.name%> ?')"
+                            >Unlist</a
+                          >
+                          <% }else{ %>
+                          <a
+                            href="/admin/unlistCategory?id=<%= category._id %>"
+                            class="btn btn-success btn-custom"
+                            onclick="return confirm('Are you really want to List <%= category.name%> ?')"
+                            >List</a
+                          >
+                          <% }%>
+                        </td>
+                      </tr>
+                      <% }) } else { %>
+                      <tr>
+                        <td colspan="8">
+                          <p class="text-center">No Categories</p>
+                        </td>
+                      </tr>
+                    <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- .col// -->
+            </div>
+            <!-- .row // -->
+          </div>
+          <!-- card body .// -->
+        </div>
+        <!-- card .// -->
+      </section>
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/vendors/select2.min.js"></script>
+    <script src="/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+      function validateForm() {
+        let category = document.getElementById("product_name").value;
+        let description = document.getElementById("description").value;
+
+        if (category.trim() === "") {
+          swal("Category name can't be null");
+          return false; // Prevent form submission
+        }
+        if (description.trim() === "") {
+          swal("description can't be null");
+          return false; // Prevent form submission
+        }
+        return true
+      }
+    </script>
+  </body>
+</html>

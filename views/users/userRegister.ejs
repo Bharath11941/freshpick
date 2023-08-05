@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fresh Pick</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg" />
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+
+    <link rel="stylesheet" href="css/aos.css" />
+
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="css/jquery.timepicker.css" />
+
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/icomoon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      body {
+        background-image: url("/images/background/fresh-colourful-ingredients-mexican-cuisine.webp");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+    </style>
+  </head>
+  <body class="goto-here">
+    <%- include("../layouts/userNav.ejs") %>
+    <!-- END nav -->
+
+    <div class="mt-5 mb-5">
+      <div
+        class="card mx-auto"
+        style="max-width: 450px; background-color: transparent"
+      >
+        <div class="card-body">
+          <h1 class="card-title text-center" style="color: black">
+            Create Account
+          </h1>
+          <% if(typeof errMessage !== 'undefined'){ %>
+          <h5 style="color: red" class="text-center mt-3"><%= errMessage %></h5>
+          <% } %> <% if(typeof succMessage !== 'undefined'){ %>
+          <p style="color: green" class="text-center mt-3">
+            <%= succMessage %>
+          </p>
+          <% } %>
+          <form
+            action=""
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
+            <div class="mb-3">
+              <label for="name" class="form-label" style="color: black"
+                >First Name</label
+              >
+              <input
+                type="text"
+                name="fname"
+                class="form-control"
+                id="fname"
+                placeholder="Enter First Name"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label" style="color: black"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                name="lname"
+                class="form-control"
+                id="lname"
+                placeholder="Enter Last Name"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label" style="color: black"
+                >Email</label
+              >
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter Email"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="mno" class="form-label" style="color: black"
+                >Mobile</label
+              >
+              <input
+                type="text"
+                name="mobile"
+                class="form-control"
+                id="mobile"
+                placeholder="Enter Mobile"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label" style="color: black"
+                >Password</label
+              >
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label" style="color: black"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-control"
+                id="cpassword"
+                placeholder="Confirm Password"
+                required
+              />
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+          </form>
+          <p class="text-center mt-3" style="color: black">
+            Already have an account? <a href="/login" style="color: red;">Sign in</a>
+
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const fnameInput = document.getElementById("fname");
+      fnameInput.addEventListener("input", () => {
+        let fname = fnameInput.value.trim();
+        if (fname === "") {
+          fnameInput.setCustomValidity("First name cannot be null");
+        } else {
+          fnameInput.setCustomValidity("");
+        }
+      });
+
+      const lnameInput = document.getElementById("lname");
+      lnameInput.addEventListener("input", () => {
+        let lname = lnameInput.value.trim();
+        if (lname === "") {
+          lnameInput.setCustomValidity("First name cannot be null");
+        } else {
+          lnameInput.setCustomValidity("");
+        }
+      });
+      const emailInput = document.getElementById("email");
+      emailInput.addEventListener("input", () => {
+        let email = emailInput.value.trim();
+        if (email === "") {
+          emailInput.setCustomValidity("Email cannot be null");
+        } else {
+          emailInput.setCustomValidity("");
+        }
+      });
+
+      const mobileInput = document.getElementById("mobile");
+      mobileInput.addEventListener("input", () => {
+        let mobile = mobileInput.value.trim();
+
+        // Regular expression pattern for a 10-digit mobile number
+        const mobileNumberPattern = /^\d{10}$/;
+
+        if (!mobileNumberPattern.test(mobile)) {
+          mobileInput.setCustomValidity("Invalid phone number");
+        } else {
+          mobileInput.setCustomValidity("");
+        }
+      });
+
+      const passwordInput = document.getElementById("password");
+
+      passwordInput.addEventListener("input", () => {
+        const password = passwordInput.value.trim();
+
+        if (password.length < 6) {
+          passwordInput.setCustomValidity("Password is less than 6");
+        } else {
+          passwordInput.setCustomValidity("");
+        }
+      });
+
+      const cpasswordInput = document.getElementById("cpassword");
+      const ogPasswordInput = document.getElementById("password");
+
+      cpasswordInput.addEventListener("input", () => {
+        const cpassword = cpasswordInput.value.trim();
+        const password = ogPasswordInput.value.trim();
+
+        if (cpassword !== password) {
+          cpasswordInput.setCustomValidity("Password doesn't match");
+        } else {
+          cpasswordInput.setCustomValidity("");
+        }
+      });
+    </script>
+
+    <%- include("../layouts/footer.ejs") %>
+  </body>
+</html>
