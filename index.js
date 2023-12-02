@@ -4,6 +4,7 @@ const noCache = require("./middlewares/cache");
 const cartCount = require("./middlewares/cartCount");
 const wishlistCount = require("./middlewares/wishlistCount");
 const localSession = require("./middlewares/userSession");
+const MongoStore = require('connect-mongo')(session);
 
 //remove cache
 app.use(noCache);
