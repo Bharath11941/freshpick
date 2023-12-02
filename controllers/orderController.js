@@ -60,7 +60,7 @@ const orderAddress = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     const { userId } = req.session;
-    const { couponCode, cartTotal } = req.body;
+    const { couponCode, cartTotal } = req.sanitisedData;
     const findCoupon = await Coupon.findOne({ couponCode: couponCode });
     if (findCoupon) {
       const minAmount = findCoupon.minAmount;
@@ -152,7 +152,7 @@ const placeOrder = async (req, res) => {
     let orderId = order._id;
     let totalAmount = order.total;
     if (status == "Placed") {
-      if (paymentMethod === "WALLET") {;
+      if (paymentMethod === "WALLET") {
         await User.updateOne(
           { email: user },
           {
@@ -211,10 +211,6 @@ const onlineVerifyPayment = async (req, res) => {
     );
     hmac = hmac.digest("hex");
     if (hmac === details.payment.razorpay_signature) {
-      await Order.findByIdAndUpdate(
-        { _id: details.order.receipt },
-        { $set: { paymentId: details.payment.razorpay_payment_id } }
-      );
       await Order.findByIdAndUpdate(
         { _id: details.order.receipt },
         { $set: { status: "Placed" } }

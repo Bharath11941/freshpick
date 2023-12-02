@@ -20,8 +20,7 @@ const getAddCoupon = async (req, res) => {
 const postAddCoupon = async (req, res) => {
   try {
     const { title, couponCode, discountAmount, minAmount, expiryDate } =
-      req.body;
-    const date = new Date();
+      req.sanitisedData;
     const coupon = new Coupon({
       title: title,
       couponCode: couponCode,
@@ -56,7 +55,7 @@ const updateCoupon = async (req, res) => {
       expiryDate,
       expire,
       id,
-    } = req.body;
+    } = req.sanitisedData;
     if (expire === "on") {
       await Coupon.findByIdAndUpdate(
         { _id: id },

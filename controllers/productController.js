@@ -7,13 +7,12 @@ const sharp = require("sharp")
 
 const viewProduct = async (req, res) => {
   try {
-    const ITEMS_PER_PAGE = 1;
+    const ITEMS_PER_PAGE = 5;
     let search = "";
     if (req.query.search) {
       search = req.query.search;
     }
     const regex = new RegExp(`^${search}`, "i");
-    const productsSearch = await Product.find();
     const page = parseInt(req.query.page) || 1;
     const totalProducts = await Product.find({ title: { $regex: regex } }).count()
     const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
@@ -38,13 +37,8 @@ const addProductLoad = async (req, res) => {
 };
 const postProduct = async (req, res) => {
   try {
-    const { title, description, price, quantity, category } = req.body;
-    // let imagearr = []; // Declare and initialize the 'image' variable as an empty array
-    // if (req.files && req.files.length > 0) {
-    //   for (let i = 0; i < req.files.length; i++) {
-    //     imagearr.push(req.files[i].filename); 
-    //   }
-    // }
+    const { title, description, price, quantity, category } = req.sanitisedData;
+    
     const resizedImages = []
     if (req.files && req.files.length > 0) {
       for (let i = 0; i < req.files.length; i++) {
@@ -69,7 +63,7 @@ const postProduct = async (req, res) => {
         errMessage: "This product is already there",
       });
     } else {
-      const productData = await products.save();
+       await products.save();
       res.redirect("/admin/viewproduct");
     }
   } catch (error) {
@@ -87,11 +81,13 @@ const editProduct = async (req, res) => {
     } else {
       res.redirect("/admin/viewproduct");
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 const updateProduct = async (req, res) => {
   try {
-    const { id, title, description, price, quantity, category } = req.body;
+    const { id, title, description, price, quantity, category } = req.sanitisedData;
     let existingProduct = await Product.findById(id);
     let resizedImages = []
     if (
@@ -111,7 +107,7 @@ const updateProduct = async (req, res) => {
         resizedImages.push(req.files[i].filename)
       }
     }
-    const updateProduct = await Product.findByIdAndUpdate(
+     await Product.findByIdAndUpdate(
       { _id: id },
       {
         $set: {
@@ -149,7 +145,7 @@ const deleteImage = async (req, res) => {
     const { img, prdtId } = req.body;
 
     fs.unlink(path.join(__dirname, "../public/productImage/resized", img), () => {});
-    const deleted = await Product.updateOne(
+     await Product.updateOne(
       { _id: prdtId },
       { $pull: { image: img } }
     );

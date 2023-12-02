@@ -85,7 +85,8 @@ const login = async (req, res) => {
 };
 const verifyLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.sanitisedData;
+    
     const userData = await User.findOne({ email: email });
     if (userData) {
       const passswordMatch = await bcrypt.compare(password, userData.password);
@@ -128,13 +129,13 @@ const register = async (req, res) => {
 };
 const postRegister = async (req, res) => {
   try {
-    const { password, confirmPassword } = req.body;
+    const { password, confirmPassword } = req.sanitisedData;
     if (password === confirmPassword) {
-      const passwordHash = await bcrypt.hash(req.body.password, 10);
-      const fname = req.body.fname;
-      const lname = req.body.lname;
-      const mobile = req.body.mobile;
-      const email = req.body.email;
+      const passwordHash = await bcrypt.hash(req.sanitisedData.password, 10);
+      const fname = req.sanitisedData.fname;
+      const lname = req.sanitisedData.lname;
+      const mobile = req.sanitisedData.mobile;
+      const email = req.sanitisedData.email;
       const user = new User({
         fname: fname,
         lname: lname,
@@ -163,8 +164,8 @@ const postRegister = async (req, res) => {
           });
         } else {
           const otp = await sendEmail(
-            req.body.fname,
-            req.body.email,
+            req.sanitisedData.fname,
+            req.sanitisedData.email,
             userData._id
           );
           req.session.otp = otp;
@@ -189,11 +190,10 @@ const postRegister = async (req, res) => {
 
 const verifyMail = async (req, res) => {
   try {
-    let recievedOtp = req.body.Otp;
-    let { forgot } = req.body;
+    let recievedOtp = req.sanitisedData.Otp;
+    let { forgot } = req.sanitisedData;
     if (forgot) {
-      console.log(req.session.forOtp);
-      const { email } = req.body;
+      const { email } = req.sanitisedData;
       if (req.session.forOtp == recievedOtp) {
         res.render("newPassword", { email });
       } else {
@@ -344,8 +344,8 @@ const userProfile = async (req, res) => {
 };
 const updateProfile = async (req, res) => {
   try {
-    const { fname, lname, email, mobile } = req.body;
-    const updateUserData = await User.updateOne(
+    const { fname, lname,  mobile } = req.sanitisedData;
+    await User.updateOne(
       { email: req.session.user },
       { $set: { fname: fname, lname: lname, mobile: mobile } }
     );
@@ -371,8 +371,8 @@ const addAddress = async (req, res) => {
   try {
     const email = req.session.user;
     const { name, housename, city, district, state, mobile, pincode } =
-      req.body;
-    const address = await User.updateOne(
+      req.sanitisedData;
+     await User.updateOne(
       { email: email },
       {
         $push: {
@@ -406,8 +406,8 @@ const updateAddress = async (req, res) => {
       mobile,
       pincode,
       fromCheckout,
-    } = req.body;
-    const updAddress = await User.updateOne(
+    } = req.sanitisedData;
+    await User.updateOne(
       { _id: userId, "address._id": addressId },
       {
         $set: {
@@ -435,7 +435,7 @@ const deleteAddress = async (req, res) => {
   try {
     const user = req.session.user;
     const { addressId } = req.body;
-    const deleteAddressResult = await User.updateOne(
+     await User.updateOne(
       { email: user },
       { $pull: { address: { _id: addressId } } }
     );
@@ -454,7 +454,7 @@ const resetPassword = async (req, res) => {
 };
 const postResetPassword = async (req, res) => {
   try {
-    const { password, oldPassword } = req.body;
+    const { password, oldPassword } = req.sanitisedData;
     const { userId } = req.session;
     const userData = await User.findById({ _id: userId });
     const passswordMatch = await bcrypt.compare(oldPassword, userData.password);
@@ -482,8 +482,7 @@ const forgetPasswordLoad = async (req, res) => {
 };
 const postForgetPassword = async (req, res) => {
   try {
-    const { email } = req.body;
-    console.log(email);
+    const { email } = req.sanitisedData;
     const userData = await User.findOne({ email: email });
     if (userData) {
       if (userData.isVerified) {
@@ -513,7 +512,7 @@ const postForgetPassword = async (req, res) => {
 };
 const newPassword = async (req, res) => {
   try {
-    const { password, email } = req.body;
+    const { password, email } = req.sanitisedData;
     const passwordHash = await bcrypt.hash(password, 10);
     await User.updateOne(
       { email: email },
@@ -653,78 +652,7 @@ const invoiceDownload = async (req,res) => {
     console.log(error.message);
   }
 }
-// const downloadInvoice = async (req, res) => {
-//   try {
-//     const { orderId } = req.params;
-//     const orderDetails = await Order.findById(orderId).populate(
-//       "products.productId"
-//     );
-//     // Convert Date object back to the desired format "YYYY-MM-DD"
-//     const createdAtDate = new Date(orderDetails.createdAt);
-//     const formattedCreatedAt = `${createdAtDate.getDate()}-${
-//       createdAtDate.getMonth() + 1
-//     }-${createdAtDate.getFullYear()}`;
-//     const dueDateDate = new Date(createdAtDate);
-//     dueDateDate.setDate(dueDateDate.getDate() + 10);
-//     const formattedDueDate = `${dueDateDate.getDate()}-${
-//       dueDateDate.getMonth() + 1
-//     }-${dueDateDate.getFullYear()}`;
- 
-//     const data = {
-//       documentTitle: "Invoice", // Title of the document
-//       currency: "USD",
-//       marginTop: 25,
-//       marginRight: 25,
-//       marginLeft: 25,
-//       marginBottom: 25,
-//       images: {
-//         // The logo on top of your invoice
-//         logo: "https://public.easyinvoice.cloud/img/logo_en_original.png",
-//         // The invoice background
-//         background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
-//       },
-//       sender: {
-//         company: "Organic Store",
-//         address: "Daravi Street",
-//         zip: "12345",
-//         city: "Mumbai",
-//         country: "India",
-//       },
-//       client: {
-//         address: orderDetails.shipAddress,
-//       },
-//       information: {
-//         number: `${orderDetails._id}`,
-//         date: formattedCreatedAt,
-//         "due-date": formattedDueDate,
-//       },
-//       products: [],
-//       bottomNotice:
-//         "Thank you for your business. Please make sure to pay your invoice within 15 days.",
-//     };
-//     data.Total = orderDetails.total;
-//     orderDetails.products.forEach((product) => {
-//       data.products.push({
-//         quantity: product.quantity,
-//         description: product.productId.title,
-//         "tax-rate": 0, // Assuming 'name' is the product name in the database
-//         price: product.productId.price, // Assuming 'price' is the product price in the database
-//       });
-//     });
-//     const result = await easyinvoice.createInvoice(data);
-//     const pdfBuffer = Buffer.from(result.pdf, "base64");
 
-//     // const fs = require('fs');
-//     // fs.writeFileSync('invoice.pdf', pdfBuffer);
-
-//     res.setHeader("Content-Type", "application/pdf");
-//     res.setHeader("Content-Disposition", 'attachment; filename="invoice.pdf"');
-//     res.send(pdfBuffer);
-//   } catch (error) {
-//     console.log(error.message);
-//     res.render("500");
-//   }
-// };
 
 module.exports = {
   orderedProductDetails,
@@ -732,7 +660,6 @@ module.exports = {
   postForgetPassword,
   loadSingleProduct,
   postResetPassword,
-  // downloadInvoice,
   invoiceDownload,
   updateProfile,
   updateAddress,

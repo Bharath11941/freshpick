@@ -17,7 +17,7 @@ const viewCategory = async (req, res) => {
 };
 const addCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description } = req.sanitisedData;
 
     const categoryData = await Category.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
@@ -54,8 +54,8 @@ const editCategory = async (req, res) => {
 };
 const updateCategory = async (req, res) => {
   try {
-    const { id, name, description } = req.body;
-    const categoryData = await Category.findByIdAndUpdate(
+    const { id, name, description } = req.sanitisedData;
+    await Category.findByIdAndUpdate(
       { _id: id },
       { $set: { name: name, description: description } }
     );

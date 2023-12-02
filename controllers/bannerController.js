@@ -27,7 +27,7 @@ const addBannerLoad = async (req, res) => {
 };
 const postAddBanner = async (req, res) => {
   try {
-    const { description, title } = req.body;
+    const { description, title } = req.sanitisedData;
     let imagearr = []; // Declare and initialize the 'image' variable as an empty array
     if (req.files && req.files.length > 0) {
       for (let i = 0; i < req.files.length; i++) {
@@ -58,7 +58,7 @@ const editBanner = async (req, res) => {
 };
 const postEditBanner = async (req, res) => {
   try {
-    const { id, title, description } = req.body;
+    const { id, title, description } = req.sanitisedData;
     const existingBanner = await Banner.findById(id)
     let imagearr = [];
     if(existingBanner && existingBanner.image && existingBanner.image.length>0 ){

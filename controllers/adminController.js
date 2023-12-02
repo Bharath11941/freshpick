@@ -20,7 +20,7 @@ const adminLogin = async (req, res) => {
 };
 const adminVerifyLogin = async (req, res) => {
   try {
-    let { email, password } = req.body;
+    let { email, password } = req.sanitisedData;
     if (admin.email === email) {
       if (admin.password === password) {
         req.session.admin = email;
@@ -113,7 +113,6 @@ const loadDashboard = async (req, res) => {
         },
       },
     ]);
-    console.log(earnings);
     if (earnings.length === 0) {
       earnings.push({ _id: null, monthlyEarnings: 0, });
     }

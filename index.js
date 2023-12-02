@@ -28,7 +28,6 @@ dbconnect.dbconnect();
 
 //for user routes
 const userRoute = require("./routes/userRoute");
-const { db } = require("./models/userModel");
 app.use("/", userRoute);
 
 //for admin routes
@@ -40,6 +39,6 @@ app.use(express.static(__dirname + "/public/userAssets"));
 app.use(express.static(__dirname + "/public/adminAssets"));
 app.use(express.static(__dirname + "/public"));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port http://localhost:${PORT}`);
+app.listen(5000, () => {
+  console.log(`Server running on port http://localhost:5000`);
 });
