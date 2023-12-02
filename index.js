@@ -10,15 +10,20 @@ app.use(noCache);
 app.set("view engine", "ejs");
 //session
 const session = require("express-session");
-app.use(session({ secret: "key", saveUninitialized: true, resave: false }));
+app.use(
+  session({
+    secret: "key",
+    saveUninitialized: true,
+    resave: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
 app.use(localSession.commonNav);
 app.use(cartCount);
-app.use(wishlistCount)
+app.use(wishlistCount);
 //error 404
-const Error404 = require('./middlewares/error')
+const Error404 = require("./middlewares/error");
 // app.use(Error404)
-
-
 
 //for database connection
 require("dotenv").config();
