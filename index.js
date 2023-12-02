@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
 const noCache = require("./middlewares/cache");
 const cartCount = require("./middlewares/cartCount");
 const wishlistCount = require("./middlewares/wishlistCount");
